@@ -1,0 +1,137 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#080d19">
+<title>WIN Terminal — Performance Calculator</title>
+<style>
+:root{--bg:#080d19;--panel:#101a2b;--panel2:#142239;--line:#263953;--cyan:#50f5e1;--green:#36e7a1;--red:#ff5577;--amber:#ffc66d;--blue:#79aaff;--text:#edf5ff;--muted:#8da2bf;--shadow:0 18px 45px #0006}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at 15% -10%,#19365c 0,transparent 38%),radial-gradient(ellipse at 100% 20%,#163d44 0,transparent 30%),var(--bg);color:var(--text);font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;min-height:100vh}
+.wrap{max-width:1100px;margin:auto;padding:22px 16px 38px}.top{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:22px}.brand{display:flex;gap:12px;align-items:center}.logo{width:48px;height:48px;border-radius:15px;background:linear-gradient(145deg,#50f5e1,#4d9cff);display:grid;place-items:center;color:#06101c;font-size:24px;font-weight:950;box-shadow:0 0 30px #50f5e133}.eyebrow{font-size:10px;letter-spacing:2.5px;color:var(--cyan);font-weight:800}.brand h1{font-size:clamp(20px,4vw,29px);letter-spacing:-1px;margin:3px 0 0}.live{font-size:10px;letter-spacing:1.4px;border:1px solid #245e55;color:var(--green);background:#0b2a2a;padding:8px 10px;border-radius:99px;white-space:nowrap}.live:before{content:"";display:inline-block;width:6px;height:6px;background:var(--green);border-radius:50%;margin-right:7px;box-shadow:0 0 9px var(--green)}
+.hero{background:linear-gradient(120deg,#132c42,#10243a 50%,#102a2a);border:1px solid #29495b;border-radius:24px;padding:22px;position:relative;overflow:hidden;box-shadow:var(--shadow);margin-bottom:16px}.hero:after{content:"";position:absolute;width:260px;height:260px;border:1px solid #50f5e11b;border-radius:50%;right:-70px;top:-110px;box-shadow:0 0 0 28px #50f5e10a,0 0 0 58px #50f5e108}.hero-label{font-size:11px;letter-spacing:2px;color:#9bb5d0;font-weight:800}.hero h2{font-size:clamp(22px,4vw,34px);margin:9px 0 7px;letter-spacing:-1px}.hero p{color:#a8bad0;margin:0;max-width:620px;line-height:1.6;font-size:13px}.hero-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:20px;position:relative;z-index:1}.hero-stat{background:#0715218c;border:1px solid #ffffff12;border-radius:14px;padding:13px}.hero-stat span{display:block;font-size:10px;letter-spacing:1.2px;color:#9cb1c8;margin-bottom:8px}.hero-stat strong{font-size:clamp(18px,3vw,27px);font-variant-numeric:tabular-nums}.cyan{color:var(--cyan)}.green{color:var(--green)}.amber{color:var(--amber)}
+.layout{display:grid;grid-template-columns:0.92fr 1.35fr;gap:16px}.panel{background:linear-gradient(160deg,#111d30,#0d1727);border:1px solid var(--line);border-radius:20px;padding:19px;box-shadow:var(--shadow)}.panel-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:17px}.panel-head h3{font-size:13px;letter-spacing:1.3px;margin:0}.num{font-size:10px;color:var(--cyan);background:#12353b;padding:6px 8px;border-radius:7px;font-weight:800}.field{margin:15px 0}.field label{display:flex;justify-content:space-between;gap:10px;color:#b6c6da;font-size:12px;margin-bottom:8px}.field small{color:var(--muted)}input[type=number],select{width:100%;border:1px solid #304563;border-radius:11px;padding:12px 13px;background:#081321;color:var(--text);font:600 15px inherit;outline:none}input:focus,select:focus{border-color:var(--cyan);box-shadow:0 0 0 3px #50f5e11a}input[type=range]{width:100%;accent-color:var(--cyan);margin:5px 0 0}.range-row{display:flex;align-items:center;gap:12px}.range-row input{flex:1}.range-val{min-width:65px;text-align:right;color:var(--cyan);font-weight:800;font-variant-numeric:tabular-nums}.hint{font-size:11px;line-height:1.55;color:var(--muted);margin-top:6px}.buttons{display:flex;gap:8px;flex-wrap:wrap}.chip{border:1px solid #304563;background:#0b1626;color:#a9bad0;border-radius:9px;padding:8px 11px;font-size:11px;font-weight:700;cursor:pointer}.chip.active,.chip:hover{border-color:var(--cyan);color:var(--cyan);background:#103039}.primary{width:100%;border:0;border-radius:12px;padding:13px;background:linear-gradient(100deg,#50f5e1,#78aaff);color:#07121d;font-size:12px;font-weight:900;letter-spacing:1px;cursor:pointer;margin-top:12px}
+.results{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:11px}.metric{padding:16px;border:1px solid #263953;border-radius:15px;background:linear-gradient(145deg,#16253b,#101b2b);min-height:111px;position:relative;overflow:hidden}.metric:after{content:"";position:absolute;right:-22px;bottom:-35px;width:85px;height:85px;border:1px solid #50f5e10e;border-radius:50%;box-shadow:0 0 0 13px #50f5e108}.metric .label{font-size:10px;letter-spacing:1px;color:var(--muted);font-weight:800}.metric .value{font-size:clamp(24px,4vw,34px);font-weight:850;letter-spacing:-1px;margin:11px 0 5px;font-variant-numeric:tabular-nums}.metric .sub{font-size:11px;color:#9cb0ca}.metric.highlight{border-color:#2b7770;background:linear-gradient(140deg,#113a3a,#12263a)}.metric.highlight .value{color:var(--cyan)}.status{margin-top:12px;border:1px solid #294c62;border-radius:13px;padding:14px;background:#0c1b2b;display:flex;align-items:flex-start;gap:10px}.status-icon{font-size:18px}.status strong{display:block;font-size:12px;margin-bottom:5px}.status p{margin:0;font-size:11px;line-height:1.55;color:#a6b8ce}.bar-wrap{margin-top:18px}.bar-title{display:flex;justify-content:space-between;font-size:11px;color:var(--muted);margin-bottom:8px}.bar{height:9px;background:#23344c;border-radius:99px;overflow:hidden}.bar-fill{height:100%;width:0;background:linear-gradient(90deg,var(--cyan),var(--green));border-radius:99px;transition:width .25s}.bottom-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:16px}.mini-title{font-size:11px;letter-spacing:1.2px;font-weight:800;color:var(--cyan);margin:0 0 12px}.formula{color:#a7bad0;font-size:12px;line-height:1.8}.formula code{color:var(--cyan);font-family:ui-monospace,monospace;background:#0a1524;padding:3px 5px;border-radius:5px}.table-wrap{overflow-x:auto}table{width:100%;border-collapse:collapse;font-size:11px}th{text-align:left;color:#91a4c2;font-weight:800;letter-spacing:.8px;padding:10px;border-bottom:1px solid #30415c}td{padding:10px;border-bottom:1px solid #1d2a40;color:#dbe7f6}td.win{color:var(--green);font-weight:800}td.lose{color:var(--red);font-weight:800}.footer{text-align:center;color:#627895;font-size:10px;line-height:1.6;margin-top:18px}.hidden{display:none!important}
+@media(max-width:760px){.wrap{padding:15px 12px 28px}.layout{grid-template-columns:1fr}.bottom-grid{grid-template-columns:1fr}.hero{padding:18px}.hero-stats{gap:7px}.hero-stat{padding:10px}.panel{padding:16px}.top{align-items:flex-start}.live{font-size:9px}.results{gap:8px}.metric{padding:13px;min-height:102px}.metric .value{font-size:27px}}
+@media(max-width:390px){.hero-stats{grid-template-columns:1fr}.hero-stat{display:flex;align-items:center;justify-content:space-between}.hero-stat span{margin:0}.brand h1{font-size:18px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header class="top">
+ <div class="brand"><div class="logo">W</div><div><div class="eyebrow">PERFORMANCE LAB / 01</div><h1>WIN Terminal</h1></div></div>
+ <div class="live">CALCULATOR ONLINE</div>
+</header>
+<section class="hero">
+ <div class="hero-label">MONTHLY EDGE MONITOR</div>
+ <h2>Know your target.<br><span class="cyan">Track the numbers.</span></h2>
+ <p>Kalkulator performa bulanan bergaya trading terminal. Ubah input, pantau WR berjalan, target total WIN, dan kebutuhan WIN tambahan secara langsung.</p>
+ <div class="hero-stats">
+  <div class="hero-stat"><span>HISTORICAL WR</span><strong class="cyan" id="heroWR">56.0%</strong></div>
+  <div class="hero-stat"><span>MONTH TARGET</span><strong id="heroTarget">18 WIN</strong></div>
+  <div class="hero-stat"><span>REMAINING DAYS</span><strong class="amber" id="heroRemain">19 DAYS</strong></div>
+ </div>
+</section>
+<div class="layout">
+<section class="panel">
+ <div class="panel-head"><h3>01 / INPUT CONTROL</h3><span class="num">SETTINGS</span></div>
+ <div class="field">
+  <label for="wr">WR rata-rata historis <b id="wrLabel" class="cyan">56%</b></label>
+  <div class="range-row"><input id="wr" type="range" min="0" max="100" step="0.5" value="56"><span class="range-val" id="wrVal">56.0%</span></div>
+  <div class="hint">Geser untuk mengubah target WR historis.</div>
+ </div>
+ <div class="field">
+  <label for="wins">WIN saat ini</label>
+  <input id="wins" type="number" min="0" step="1" value="7" inputmode="numeric">
+ </div>
+ <div class="field">
+  <label for="elapsed">Hari/result yang sudah dicatat</label>
+  <div class="range-row"><input id="elapsed" type="range" min="1" max="31" step="1" value="12"><span class="range-val" id="elapsedVal">12 hari</span></div>
+  <div class="hint">Gunakan jumlah hari/result yang benar-benar sudah dicatat. Hari tanpa result tidak otomatis dianggap LOSE.</div>
+ </div>
+ <div class="field">
+  <label>Total hari dalam bulan</label>
+  <div class="buttons" id="monthButtons">
+   <button class="chip" type="button" data-days="28">28 hari</button><button class="chip" type="button" data-days="29">29 hari</button><button class="chip" type="button" data-days="30">30 hari</button><button class="chip active" type="button" data-days="31">31 hari</button>
+  </div>
+ </div>
+ <button class="primary" type="button" id="reset">↻ RESET CONTOH</button>
+</section>
+<section class="panel">
+ <div class="panel-head"><h3>02 / LIVE PERFORMANCE</h3><span class="num">AUTO UPDATE</span></div>
+ <div class="results">
+  <div class="metric highlight"><div class="label">CURRENT WR</div><div class="value" id="currentWR">58.3%</div><div class="sub">WIN ÷ hari/result tercatat</div></div>
+  <div class="metric"><div class="label">TARGET TOTAL WIN</div><div class="value" id="targetWins">18</div><div class="sub">Target pada akhir bulan</div></div>
+  <div class="metric"><div class="label">MORE WIN NEEDED</div><div class="value amber" id="neededWins">11</div><div class="sub">WIN tambahan menuju target</div></div>
+  <div class="metric"><div class="label">DAYS REMAINING</div><div class="value" id="remainingDays">19</div><div class="sub">Sisa hari kalender</div></div>
+ </div>
+ <div class="status"><div class="status-icon" id="statusIcon">↗</div><div><strong id="statusTitle">TARGET MASIH MUNGKIN DICAPAI</strong><p id="statusText">Secara matematis, kebutuhan WIN masih tidak melebihi sisa hari.</p></div></div>
+ <div class="bar-wrap"><div class="bar-title"><span>PROGRESS MENUJU TARGET WIN</span><b id="progressLabel">38.9%</b></div><div class="bar"><div class="bar-fill" id="progressBar"></div></div></div>
+</section>
+</div>
+<div class="bottom-grid">
+<section class="panel">
+ <h3 class="mini-title">03 / TARGET ENGINE</h3>
+ <div class="formula">
+  Target total WIN = <code>ceil(WR historis × total hari)</code><br>
+  WIN tambahan = <code>max(0, target − WIN saat ini)</code><br>
+  Rata-rata WIN per sisa hari = <code>ceil(WIN tambahan ÷ sisa hari)</code>
+ </div>
+ <div class="bar-wrap"><div class="bar-title"><span>KEBUTUHAN RATA-RATA / SISA HARI</span><b id="perDay">1 WIN/hari</b></div></div>
+</section>
+<section class="panel">
+ <h3 class="mini-title">04 / QUICK READOUT</h3>
+ <div class="table-wrap"><table><tbody>
+  <tr><th>METRIC</th><th>VALUE</th></tr>
+  <tr><td>WR historis</td><td id="tblWR">56.0%</td></tr>
+  <tr><td>WIN saat ini</td><td id="tblWins">7</td></tr>
+  <tr><td>Hari dicatat</td><td id="tblElapsed">12</td></tr>
+  <tr><td>WR akhir jika target tercapai</td><td id="tblFinal">58.1%</td></tr>
+ </tbody></table></div>
+</section>
+</div>
+<div class="footer">WIN TERMINAL • Responsive for mobile & desktop<br>Hasil adalah perhitungan matematis berdasarkan input, bukan prediksi atau jaminan hasil.</div>
+</div>
+<script>
+(function(){
+ function $(id){return document.getElementById(id)}
+ var days=31;
+ function fmt(n){return Number(n).toLocaleString('id-ID',{maximumFractionDigits:1,minimumFractionDigits:1})}
+ function calculate(){
+  var wr=Number($('wr').value)/100;
+  var wins=Math.max(0,Math.floor(Number($('wins').value)||0));
+  var elapsed=Math.max(1,Math.floor(Number($('elapsed').value)||1));
+  var targetDays=days;
+  var target=Math.ceil(wr*targetDays);
+  var remaining=Math.max(0,targetDays-elapsed);
+  var needed=Math.max(0,target-wins);
+  var current=elapsed?wins/elapsed*100:0;
+  $('wrLabel').textContent=fmt(wr*100)+'%'; $('wrVal').textContent=fmt(wr*100)+'%';
+  $('elapsedVal').textContent=elapsed+' hari';
+  $('heroWR').textContent=fmt(wr*100)+'%'; $('heroTarget').textContent=target+' WIN'; $('heroRemain').textContent=remaining+' DAYS';
+  $('currentWR').textContent=fmt(current)+'%'; $('targetWins').textContent=target; $('neededWins').textContent=needed; $('remainingDays').textContent=remaining;
+  $('progressLabel').textContent=(target?Math.min(100,wins/target*100):100).toFixed(1)+'%';
+  $('progressBar').style.width=(target?Math.min(100,wins/target*100):100)+'%';
+  $('perDay').textContent=remaining===0?(needed===0?'0 WIN/hari':'—'):Math.ceil(needed/remaining)+' WIN/hari';
+  $('tblWR').textContent=fmt(wr*100)+'%'; $('tblWins').textContent=wins; $('tblElapsed').textContent=elapsed;
+  $('tblFinal').textContent=fmt(wins/targetDays*100)+'% jika hasil tidak bertambah';
+  var title,text,icon;
+  if(elapsed>targetDays){title='CEK INPUT HARI';text='Hari yang dicatat melebihi total hari dalam bulan.';icon='!'}
+  else if(wins>elapsed){title='CEK INPUT WIN';text='Jumlah WIN tidak boleh melebihi jumlah hari/result yang dicatat.';icon='!'}
+  else if(needed===0){title='TARGET TOTAL WIN TERCAPAI';text='Jumlah WIN saat ini sudah mencapai target matematis bulanan.';icon='✓'}
+  else if(needed>remaining){title='TARGET TIDAK MUNGKIN DICAPAI';text='Kebutuhan WIN tambahan melebihi sisa hari yang tersedia.';icon='!'}
+  else{title='TARGET MASIH MUNGKIN DICAPAI';text='Secara matematis, kebutuhan WIN masih tidak melebihi sisa hari. Ini bukan prediksi hasil.';icon='↗'}
+  $('statusTitle').textContent=title; $('statusText').textContent=text; $('statusIcon').textContent=icon;
+  $('statusIcon').style.color=(needed===0?'var(--green)':needed>remaining?'var(--red)':'var(--cyan)');
+  document.querySelectorAll('[data-days]').forEach(function(btn){btn.classList.toggle('active',Number(btn.getAttribute('data-days'))===days)});
+ }
+ $('wr').addEventListener('input',calculate);
+ $('wins').addEventListener('input',calculate);
+ $('elapsed').addEventListener('input',calculate);
+ document.querySelectorAll('[data-days]').forEach(function(btn){btn.addEventListener('click',function(){days=Number(btn.getAttribute('data-days'));$('elapsed').max=days;if(Number($('elapsed').value)>days)$('elapsed').value=days;calculate()})});
+ $('reset').addEventListener('click',function(){days=31;$('wr').value=56;$('wins').value=7;$('elapsed').value=12;$('elapsed').max=31;calculate()});
+ calculate();
+})();
+</script>
+</body>
+</html>
